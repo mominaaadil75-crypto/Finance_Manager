@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><sqlb_project><db path="finance.db" readonly="0" foreign_keys="1" case_sensitive_like="0" temp_store="0" wal_autocheckpoint="1000" synchronous="2"/><attached/><window><main_tabs open="structure browser pragmas query" current="3"/></window><tab_structure><column_width id="0" width="300"/><column_width id="1" width="0"/><column_width id="2" width="100"/><column_width id="3" width="1116"/><column_width id="4" width="0"/><expanded_item id="0" parent="1"/><expanded_item id="1" parent="0"/><expanded_item id="1" parent="1"/><expanded_item id="2" parent="1"/><expanded_item id="3" parent="1"/></tab_structure><tab_browse><table title="budgets" custom_title="0" dock_id="1" table="4,7:mainbudgets"/><dock_state state="000000ff00000000fd00000001000000020000043c000002befc0100000001fb000000160064006f0063006b00420072006f007700730065003101000000000000043c0000011800ffffff0000043c0000000000000004000000040000000800000008fc00000000"/><default_encoding codec=""/><browse_table_settings><table schema="main" name="budgets" show_row_id="0" encoding="" plot_x_axis="" unlock_view_pk="_rowid_" freeze_columns="0"><sort><column index="1" mode="1"/></sort><column_widths><column index="1" value="85"/><column index="2" value="54"/></column_widths><filter_values/><conditional_formats/><row_id_formats/><display_formats/><hidden_columns/><plot_y_axes/><global_filter/></table></browse_table_settings></tab_browse><tab_sql><sql name="SQL 1">-- See all transactions in October
+SELECT * FROM transactions 
+WHERE date BETWEEN '2023-10-01' AND '2023-10-31';
+
+-- Calculate total expenses
+SELECT SUM(amount) AS total_expenses 
+FROM transactions 
+WHERE type = 'Expense';
+
+-- See budgets with spending status
+SELECT 
+    budgets.category, 
+    budgets.amount AS budget,
+    SUM(CASE WHEN transactions.type = 'Expense' THEN transactions.amount ELSE 0 END) AS spent,
+    budgets.amount - SUM(CASE WHEN transactions.type = 'Expense' THEN transactions.amount ELSE 0 END) AS remaining
+FROM budgets
+LEFT JOIN transactions ON budgets.category = transactions.category
+GROUP BY budgets.category;</sql><current_tab id="0"/></tab_sql></sqlb_project>
